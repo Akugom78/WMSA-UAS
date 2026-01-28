@@ -666,7 +666,7 @@ function createZoneFromFeature(feature, zoneId, zoneDesc, minAlt, maxAlt, startT
     zones.push(zone);
     if (showLabel) setTimeout(() => toggleZoneLabel(zones.length - 1), 100);
     updateZoneList();
-    saveZonesToStorage();
+    // saveZonesToStorage();
 
     if (startTime || endTime) {
         setTimeout(() => updateAllStatuses(), 1000);
@@ -871,7 +871,7 @@ document.getElementById('saveEditBtn').addEventListener('click', function() {
     }
     
     updateZoneList();
-    saveZonesToStorage();
+    // saveZonesToStorage();
     document.getElementById('editModal').style.display = 'none';
 });
 
@@ -900,7 +900,7 @@ function deleteZone(index) {
         if (zone.label) map.removeOverlay(zone.label);
         zones.splice(index, 1);
         updateZoneList();
-        saveZonesToStorage();
+        // saveZonesToStorage();
     }
 }
 
@@ -1101,12 +1101,21 @@ function saveZonesToStorage() {
     localStorage.setItem('wmsaZones', JSON.stringify(data));
 }
 
-function loadZonesFromStorage() {
-    const saved = localStorage.getItem('wmsaZones');
-    if (!saved) return;
-
+// ✅ LOAD ZONES FROM notams.json ON GITHUB
+async function loadZonesFromGitHub() {
     try {
-        const data = JSON.parse(saved);
+        // Add cache-busting to avoid stale data
+        const response = await fetch('notams.json?' + Date.now());
+        if (!response.ok) throw new Error("Failed to load notams.json");
+        
+        const data = await response.json();
+        zones = []; // clear existing
+
+        // Remove all current layers
+        map.getLayers().getArray()
+            .filter(layer => layer !== wmsaLayer && layer !== map.getLayers().item(0))
+            .forEach(layer => map.removeLayer(layer));
+
         data.forEach(item => {
             if (!item.geometry?.coordinates || item.geometry.coordinates.length < 3) return;
             
@@ -1165,24 +1174,25 @@ function loadZonesFromStorage() {
             };
 
             zones.push(zone);
+
+            if (item.showLabel) {
+                setTimeout(() => toggleZoneLabel(zones.length - 1), 100);
+            }
         });
 
-        setTimeout(() => {
-            zones.forEach((zone, index) => {
-                if (zone.showLabel) toggleZoneLabel(index);
-            });
-        }, 500);
-
         updateZoneList();
-        if (zones.some(z => z.startTime || z.endTime)) setTimeout(updateAllStatuses, 1000);
+        if (zones.some(z => z.startTime || z.endTime)) {
+            setTimeout(updateAllStatuses, 1000);
+        }
 
-    } catch(e) {
-        console.error("Failed to load zones:", e);
+    } catch (error) {
+        console.error("Failed to load zones:", error);
+        alert("⚠️ Could not load NOTAM data. Check browser console (F12).");
     }
 }
 
 // INIT
-loadZonesFromStorage();
+loadZonesFromGitHub();
 
 </script>
 
