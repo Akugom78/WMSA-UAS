@@ -666,7 +666,7 @@ function createZoneFromFeature(feature, zoneId, zoneDesc, minAlt, maxAlt, startT
     zones.push(zone);
     if (showLabel) setTimeout(() => toggleZoneLabel(zones.length - 1), 100);
     updateZoneList();
-    // saveZonesToStorage();
+    saveZonesToStorage();
 
     if (startTime || endTime) {
         setTimeout(() => updateAllStatuses(), 1000);
@@ -871,7 +871,7 @@ document.getElementById('saveEditBtn').addEventListener('click', function() {
     }
     
     updateZoneList();
-    // saveZonesToStorage();
+    saveZonesToStorage();
     document.getElementById('editModal').style.display = 'none';
 });
 
@@ -900,7 +900,7 @@ function deleteZone(index) {
         if (zone.label) map.removeOverlay(zone.label);
         zones.splice(index, 1);
         updateZoneList();
-        // saveZonesToStorage();
+        saveZonesToStorage();
     }
 }
 
@@ -1197,4 +1197,5 @@ loadZonesFromGitHub();
 </script>
 
 </body>
+
 </html>
