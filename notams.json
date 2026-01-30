@@ -35,45 +35,6 @@
     }
   },
   {
-    "id": "A5231/25",
-    "desc": "A) WMSA B) 2511280100 C) 2601300400 \nD) 0100-0400\nE) UA ACT WILL TAKE PLACE AT:\nALAM PERDANA,PUNCAK ALAM\nF) GND  G) 400FT AGL",
-    "minAlt": 0,
-    "maxAlt": 400,
-    "startTime": "2025-11-28T09:00:00.000Z",
-    "endTime": "2026-01-30T12:00:00.000Z",
-    "color": "#006400",
-    "showLabel": false,
-    "geometry": {
-      "type": "Polygon",
-      "coordinates": [
-        [
-          101.454358,
-          3.236707999999979
-        ],
-        [
-          101.457031,
-          3.234656000000001
-        ],
-        [
-          101.46304400000001,
-          3.241513999999995
-        ],
-        [
-          101.458872,
-          3.2466419999999943
-        ],
-        [
-          101.452417,
-          3.2415359999999964
-        ],
-        [
-          101.454358,
-          3.236707999999979
-        ]
-      ]
-    }
-  },
-  {
     "id": "A5168/25",
     "desc": "A) WMSA B) 2511200000 C) 2602200900 EST\nD) 0000-0900\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT MERU CITY GATE, SELANGOR",
     "minAlt": 0,
@@ -482,6 +443,84 @@
         [
           101.539472,
           3.0769439999999832
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A0425/26",
+    "desc": "A) WMFC B) 2602010000 C) 2603311000 \nD) DLY 0000-1000\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT KLANG - SABAK BERNAM\n   RMK: ACT SUBJ ATC\nF) SFC                             G) 400FT AGL",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-02-01T00:00:00.000Z",
+    "endTime": "2026-03-31T10:00:00.000Z",
+    "color": "#00008B",
+    "showLabel": false,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.416389,
+          3.11888900000001
+        ],
+        [
+          101.398056,
+          3.1572220000000044
+        ],
+        [
+          101.3475,
+          3.2477779999999967
+        ],
+        [
+          101.260833,
+          3.452777999999995
+        ],
+        [
+          101.105556,
+          3.600278000000017
+        ],
+        [
+          101.009444,
+          3.8005560000000145
+        ],
+        [
+          101.416389,
+          3.11888900000001
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A0424/26",
+    "desc": "A) WMSA B) 2602010000 C) 2603311000 \nD) DLY 0000-1000\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE FROM SHAH ALAM - KLANG\n   \n    RMK: ACT SUBJ ATC\nF) SFC                             G) 300FT AMSL",
+    "minAlt": 0,
+    "maxAlt": 300,
+    "startTime": "2026-02-01T00:00:00.000Z",
+    "endTime": "2026-03-31T10:00:00.000Z",
+    "color": "#00008B",
+    "showLabel": false,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.525278,
+          3.0927779999999956
+        ],
+        [
+          101.407222,
+          3.111110999999994
+        ],
+        [
+          101.355556,
+          3.129166999999981
+        ],
+        [
+          101.32833300000001,
+          3.1180559999999957
+        ],
+        [
+          101.525278,
+          3.0927779999999956
         ]
       ]
     }
