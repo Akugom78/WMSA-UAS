@@ -524,5 +524,79 @@
         ]
       ]
     }
+  },
+  {
+    "id": "A0443/26",
+    "desc": "A) WMSA B) 2601310000 C) 2602030900 \nD) DLY BTN 0000-0900 JAN 31 TIL FEB 03 \nE) UA ACT WILL TAKE PLACE AT PADANG BOLA MOSEP, PAYA JARAS\n\n\nF) GND                             G) 500FT",
+    "minAlt": 0,
+    "maxAlt": 500,
+    "startTime": "2026-01-31T00:00:00.000Z",
+    "endTime": "2026-02-03T09:00:00.000Z",
+    "color": "#8B4513",
+    "showLabel": false,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.548333,
+          3.2019439999999975
+        ],
+        [
+          101.555556,
+          3.201389000000006
+        ],
+        [
+          101.55499999999999,
+          3.2058329999999984
+        ],
+        [
+          101.546944,
+          3.206666999999996
+        ],
+        [
+          101.546389,
+          3.203610999999995
+        ],
+        [
+          101.548333,
+          3.2019439999999975
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A0444/26",
+    "desc": "A) WMSA B) 2602100200 C) 2602150800 \nD) DLY BTN 0200-0800\nE) UA ACT WILL TAKE PLACE AT EMPIRE RESIDENCE, DAMANSARA PERDANA\n\n\nF) GND                             G) 400FT AMSL",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-02-10T02:00:00.000Z",
+    "endTime": "2026-02-15T08:00:00.000Z",
+    "color": "#4B0082",
+    "showLabel": false,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.602589,
+          3.1785560000000004
+        ],
+        [
+          101.613558,
+          3.1785529999999937
+        ],
+        [
+          101.613556,
+          3.164182999999994
+        ],
+        [
+          101.602589,
+          3.164182999999994
+        ],
+        [
+          101.602589,
+          3.1785560000000004
+        ]
+      ]
+    }
   }
 ]
