@@ -233,10 +233,16 @@ border: 1px solid #004494;
 margin: 0 0 10px 0; font-size: 13px; color: #004494; font-weight: bold;
 }
 .info-footer {
-position: fixed; bottom: 10px; left: 10px; z-index: 1000;
+position: fixed; bottom: 10px; left: 10px; right: 10px; z-index: 1000;
 background: rgba(0,68,148,0.9); color: white; padding: 8px 15px;
 border-radius: 4px; font-size: 12px; font-weight: bold;
 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+display: flex;
+justify-content: space-between;
+}
+.footer-left, .footer-right {
+display: flex;
+gap: 15px;
 }
 </style>
 </head>
@@ -320,7 +326,7 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 <button id="exportBtn" class="success">📤 Export Session Zones</button>
 <div style="margin-top:10px; padding:8px; background:#f9f9f9; border-radius:4px; font-size:11px;">
 <strong>ℹ️ Info:</strong><br>
-• Official data: notams.json<br>
+• Official  notams.json<br>
 • Session zones are temporary<br>
 • Export to save your work
 </div>
@@ -342,9 +348,16 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 
 <div id="map"></div>
 
-<!-- INFO FOOTER -->
+<!-- INFO FOOTER - UPDATED WITH FILE TIMESTAMP -->
 <div class="info-footer">
-WMSA NOTAM Visualizer | Data: notams.json | <span id="dataStatus">Loading...</span>
+<div class="footer-left">
+<span>WMSA NOTAM Visualizer</span>
+<span>| Data: notams.json</span>
+</div>
+<div class="footer-right">
+<span id="fileTimestamp">File: Loading...</span>
+<span id="loadTimestamp">Loaded: Loading...</span>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
@@ -402,6 +415,18 @@ setTimeout(() => { el.style.display = 'none'; }, 5000);
 
 function hideLoading() {
 document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+// Format UTC timestamp in 24-hour format
+function formatUTC(date) {
+if (!date) return '-';
+const d = String(date.getDate()).padStart(2, '0');
+const m = String(date.getMonth() + 1).padStart(2, '0');
+const y = date.getFullYear();
+const h = String(date.getHours()).padStart(2, '0');
+const min = String(date.getMinutes()).padStart(2, '0');
+const s = String(date.getSeconds()).padStart(2, '0');
+return `${y}-${m}-${d} ${h}:${min}:${s} UTC`;
 }
 
 // =============================
@@ -1143,17 +1168,36 @@ setTimeout(updateAllStatuses, 60000);
 }
 
 // =============================
-// LOAD DATA FROM notams.json (ONLINE ONLY)
+// LOAD DATA FROM notams.json (ONLINE ONLY) WITH FILE TIMESTAMP
 // =============================
 async function loadNotamsData() {
 try {
-const response = await fetch(DATA_FILE);
+const response = await fetch(DATA_FILE + '?_=' + Date.now()); // Cache busting
 if (!response.ok) {
 throw new Error(`Failed to load ${DATA_FILE}: ${response.status} ${response.statusText}`);
 }
-const data = await response.json();
-document.getElementById('dataStatus').textContent = `Updated: ${new Date().toISOString().slice(0,16)} UTC`;
 
+// GET FILE MODIFICATION TIMESTAMP FROM HTTP HEADER
+const lastModifiedHeader = response.headers.get('Last-Modified');
+let fileTimestamp = '-';
+
+if (lastModifiedHeader) {
+const fileDate = new Date(lastModifiedHeader);
+fileTimestamp = formatUTC(fileDate);
+document.getElementById('fileTimestamp').textContent = `File: ${fileTimestamp}`;
+} else {
+// Fallback: Try to get timestamp from JSON data itself
+document.getElementById('fileTimestamp').textContent = `File: Unknown`;
+}
+
+// PARSE JSON DATA
+const data = await response.json();
+
+// SET LOAD TIMESTAMP (CURRENT TIME)
+const loadTime = new Date();
+document.getElementById('loadTimestamp').textContent = `Loaded: ${formatUTC(loadTime)}`;
+
+// CREATE ZONES FROM DATA
 data.forEach(item => {
 if (!item.geometry?.coordinates || item.geometry.coordinates.length < 3) return;
 const projectedCoords = item.geometry.coordinates.map(pt => ol.proj.fromLonLat(pt));
@@ -1198,10 +1242,11 @@ if (zones.some(z => z.startTime || z.endTime)) setTimeout(updateAllStatuses, 100
 }, 500);
 
 } catch (error) {
-console.error("Error loading NOTAM data:", error);
+console.error("Error loading NOTAM ", error);
 showError(`❌ ${error.message}. Please ensure notams.json exists in the same directory.`);
 hideLoading();
-document.getElementById('dataStatus').textContent = 'Error loading data';
+document.getElementById('fileTimestamp').textContent = `File: Error`;
+document.getElementById('loadTimestamp').textContent = `Loaded: Error`;
 }
 }
 
