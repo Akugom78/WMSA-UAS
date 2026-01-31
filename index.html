@@ -317,14 +317,12 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 </div>
 
 <hr style="margin:10px 0;">
-<button id="exportBtn" class="success">📤 Export User Zones</button>
-<button id="importBtn">📥 Import User Zones</button>
-<input type="file" id="importFile" accept=".json" style="display:none;">
+<button id="exportBtn" class="success">📤 Export Session Zones</button>
 <div style="margin-top:10px; padding:8px; background:#f9f9f9; border-radius:4px; font-size:11px;">
 <strong>ℹ️ Info:</strong><br>
-• Data loaded from notams.json<br>
-• User zones saved locally<br>
-• Export to backup your data
+• Official data: notams.json<br>
+• Session zones are temporary<br>
+• Export to save your work
 </div>
 </div>
 </div>
@@ -346,16 +344,15 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 
 <!-- INFO FOOTER -->
 <div class="info-footer">
-WMSA NOTAM Visualizer | Data: notams.json | Last Updated: <span id="lastUpdated">-</span>
+WMSA NOTAM Visualizer | Data: notams.json | <span id="dataStatus">Loading...</span>
 </div>
 
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
 <script>
 // =============================
-// CONFIGURATION
+// CONFIGURATION - ONLINE ONLY MODE
 // =============================
 const DATA_FILE = 'notams.json';
-const USER_DATA_KEY = 'wmsaUserZones';
 
 // =============================
 // 🗺️ MAP — ROTATED 240° CLOCKWISE
@@ -654,8 +651,7 @@ maxAlt,
 startTime,
 endTime,
 color,
-false,
-true // mark as user-created
+false
 );
 
 // Reset UI
@@ -731,8 +727,7 @@ maxAlt,
 startTime,
 endTime,
 color,
-false,
-true // mark as user-created
+false
 );
 
 // Reset circle inputs
@@ -838,7 +833,7 @@ color: color + '66'
 // =============================
 // ZONE SYSTEM — WITH POPUP
 // =============================
-function createZoneFromFeature(feature, zoneId, zoneDesc, minAlt, maxAlt, startTime, endTime, color, showLabel, isUserCreated = false) {
+function createZoneFromFeature(feature, zoneId, zoneDesc, minAlt, maxAlt, startTime, endTime, color, showLabel) {
 const source = new ol.source.Vector({ features: [feature] });
 const layer = new ol.layer.Vector({ source: source });
 map.addLayer(layer);
@@ -888,15 +883,13 @@ color: color,
 popup: popup,
 showLabel: showLabel,
 label: null,
-status: status,
-isUserCreated: isUserCreated // Track if user-created
+status: status
 };
 
 zones.push(zone);
 
 if (showLabel) setTimeout(() => toggleZoneLabel(zones.length - 1), 100);
 updateZoneList();
-saveUserZonesToStorage();
 
 if (startTime || endTime) {
 setTimeout(() => updateAllStatuses(), 1000);
@@ -904,16 +897,15 @@ setTimeout(() => updateAllStatuses(), 1000);
 }
 
 // =============================
-// EXPORT / IMPORT USER ZONES
+// EXPORT SESSION ZONES ONLY
 // =============================
 document.getElementById('exportBtn').addEventListener('click', function() {
-const userZones = zones.filter(z => z.isUserCreated);
-if (userZones.length === 0) {
-alert("No user-created zones to export.");
+if (zones.length === 0) {
+alert("No zones to export.");
 return;
 }
 
-const data = userZones.map(z => {
+const data = zones.map(z => {
 const geom = z.feature.getGeometry();
 const coords = geom.getType() === 'Polygon' ?
 geom.getCoordinates()[0].map(pt => ol.proj.toLonLat(pt)) : [];
@@ -934,84 +926,10 @@ const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json
 const url = URL.createObjectURL(blob);
 const a = document.createElement('a');
 a.href = url;
-a.download = `wmsa_user_zones_${new Date().toISOString().slice(0,10)}.json`;
+a.download = `wmsa_session_${new Date().toISOString().slice(0,10)}.json`;
 a.click();
 URL.revokeObjectURL(url);
-alert(`✅ Exported ${userZones.length} user zones.`);
-});
-
-document.getElementById('importBtn').addEventListener('click', function() {
-document.getElementById('importFile').click();
-});
-
-document.getElementById('importFile').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (!file) return;
-
-const reader = new FileReader();
-reader.onload = function(ev) {
-try {
-const data = JSON.parse(ev.target.result);
-const count = data.length;
-
-data.forEach(item => {
-if (!item.geometry?.coordinates || item.geometry.coordinates.length < 3) return;
-
-const projectedCoords = item.geometry.coordinates.map(pt => ol.proj.fromLonLat(pt));
-const feature = new ol.Feature({ geometry: new ol.geom.Polygon([projectedCoords]) });
-const layer = new ol.layer.Vector({ source: new ol.source.Vector({ features: [feature] }) });
-
-const status = getZoneStatus(item.startTime, item.endTime);
-feature.setStyle(createStyle(item.color, status));
-map.addLayer(layer);
-
-// Create popup
-const popup = new ol.Overlay({ element: document.createElement('div'), positioning: 'bottom-center', stopEvent: false });
-map.addOverlay(popup);
-
-const altStr = item.minAlt || item.maxAlt ? `${item.minAlt || 0}–${item.maxAlt || 'UNL'} ft` : 'No altitude';
-const startStr = item.startTime ? new Date(item.startTime).toLocaleString('en-GB', { timeZone: 'UTC', hour12: false }) : 'N/A';
-const endStr = item.endTime ? new Date(item.endTime).toLocaleString('en-GB', { timeZone: 'UTC', hour12: false }) : 'N/A';
-const statusHTML = formatStatus(item.startTime, item.endTime);
-
-popup.getElement().innerHTML = `
-<div style="background: #FFFFFF; color: #000000; padding: 10px 12px; border: 2px solid #000000; border-radius: 6px; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.5); line-height: 1.4; max-width: 220px; word-wrap: break-word;">
-<strong>${item.id}</strong><br>
-<small style="font-weight:normal;">${item.desc}</small><br>
-<small>Alt: ${altStr}</small><br>
-<small>Start: ${startStr}</small><br>
-<small>End: ${endStr}</small><br>
-${statusHTML}
-</div>
-`;
-
-const zoneStatus = getZoneStatus(item.startTime, item.endTime);
-const zone = {
-id: item.id, desc: item.desc, minAlt: item.minAlt, maxAlt: item.maxAlt,
-startTime: item.startTime, endTime: item.endTime, layer: layer, feature: feature,
-color: item.color, popup: popup, showLabel: item.showLabel, label: null,
-status: zoneStatus, isUserCreated: true
-};
-
-zones.push(zone);
-});
-
-setTimeout(() => {
-zones.slice(-count).forEach((zone, idx) => {
-if (zone.showLabel) toggleZoneLabel(zones.length - count + idx);
-});
-}, 500);
-
-updateZoneList();
-saveUserZonesToStorage();
-alert(`✅ Imported ${count} user zones.`);
-} catch (error) {
-console.error("Import failed:", error);
-alert("❌ Failed to import zones: " + error.message);
-}
-};
-reader.readAsText(file);
-this.value = '';
+alert(`✅ Exported ${zones.length} zones (official + session).`);
 });
 
 // =============================
@@ -1043,7 +961,6 @@ zone.startTime = document.getElementById('editStartTime').value ? new Date(docum
 zone.endTime = document.getElementById('editEndTime').value ? new Date(document.getElementById('editEndTime').value).toISOString() : null;
 zone.status = getZoneStatus(zone.startTime, zone.endTime);
 zone.feature.setStyle(createStyle(zone.color, zone.status));
-zone.isUserCreated = true; // Mark as user-modified
 
 const altStr = zone.minAlt || zone.maxAlt ? `${zone.minAlt || 0}–${zone.maxAlt || 'UNL'} ft` : 'No altitude';
 const startStr = zone.startTime ? new Date(zone.startTime).toLocaleString('en-GB', { timeZone: 'UTC', hour12: false }) : 'N/A';
@@ -1063,7 +980,6 @@ ${statusHTML}
 
 if (zone.showLabel) toggleZoneLabel(currentEditIndex);
 updateZoneList();
-saveUserZonesToStorage();
 document.getElementById('editModal').style.display = 'none';
 });
 
@@ -1086,7 +1002,6 @@ if (zone.popup) map.removeOverlay(zone.popup);
 if (zone.label) map.removeOverlay(zone.label);
 zones.splice(index, 1);
 updateZoneList();
-saveUserZonesToStorage();
 }
 }
 
@@ -1117,7 +1032,6 @@ map.addOverlay(label);
 zone.label = label;
 }
 zone.showLabel = !zone.showLabel;
-saveUserZonesToStorage();
 }
 }
 
@@ -1150,7 +1064,6 @@ item.innerHTML = `
 <div style="display:flex; align-items:center;">
 <div class="color-box" style="background:${zone.color};"></div>
 <strong>${zone.id}</strong>
-${zone.isUserCreated ? '<span style="margin-left:6px; color:#28a745; font-size:10px; font-weight:normal;">(USER)</span>' : ''}
 </div>
 <div class="zone-actions">
 <button class="edit-icon" onclick="editZone(${originalIndex})">✎</button>
@@ -1230,71 +1143,7 @@ setTimeout(updateAllStatuses, 60000);
 }
 
 // =============================
-// USER ZONES PERSISTENCE
-// =============================
-function saveUserZonesToStorage() {
-const userZones = zones.filter(z => z.isUserCreated).map(z => {
-const geom = z.feature.getGeometry();
-const coords = geom.getType() === 'Polygon' ? geom.getCoordinates()[0].map(pt => ol.proj.toLonLat(pt)) : [];
-return {
-id: z.id, desc: z.desc, minAlt: z.minAlt, maxAlt: z.maxAlt,
-startTime: z.startTime, endTime: z.endTime, color: z.color,
-showLabel: z.showLabel, geometry: { type: 'Polygon', coordinates: coords }
-};
-});
-localStorage.setItem(USER_DATA_KEY, JSON.stringify(userZones));
-}
-
-function loadUserZonesFromStorage() {
-const saved = localStorage.getItem(USER_DATA_KEY);
-if (!saved) return;
-try {
-const data = JSON.parse(saved);
-data.forEach(item => {
-if (!item.geometry?.coordinates || item.geometry.coordinates.length < 3) return;
-const projectedCoords = item.geometry.coordinates.map(pt => ol.proj.fromLonLat(pt));
-const feature = new ol.Feature({ geometry: new ol.geom.Polygon([projectedCoords]) });
-const layer = new ol.layer.Vector({ source: new ol.source.Vector({ features: [feature] }) });
-const status = getZoneStatus(item.startTime, item.endTime);
-feature.setStyle(createStyle(item.color, status));
-map.addLayer(layer);
-const popup = new ol.Overlay({ element: document.createElement('div'), positioning: 'bottom-center', stopEvent: false });
-map.addOverlay(popup);
-const altStr = item.minAlt || item.maxAlt ? `${item.minAlt || 0}–${item.maxAlt || 'UNL'} ft` : 'No altitude';
-const startStr = item.startTime ? new Date(item.startTime).toLocaleString('en-GB', { timeZone: 'UTC', hour12: false }) : 'N/A';
-const endStr = item.endTime ? new Date(item.endTime).toLocaleString('en-GB', { timeZone: 'UTC', hour12: false }) : 'N/A';
-const statusHTML = formatStatus(item.startTime, item.endTime);
-popup.getElement().innerHTML = `
-<div style="background: #FFFFFF; color: #000000; padding: 10px 12px; border: 2px solid #000000; border-radius: 6px; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.5); line-height: 1.4; max-width: 220px; word-wrap: break-word;">
-<strong>${item.id}</strong><br>
-<small style="font-weight:normal;">${item.desc}</small><br>
-<small>Alt: ${altStr}</small><br>
-<small>Start: ${startStr}</small><br>
-<small>End: ${endStr}</small><br>
-${statusHTML}
-</div>
-`;
-const zoneStatus = getZoneStatus(item.startTime, item.endTime);
-const zone = {
-id: item.id, desc: item.desc, minAlt: item.minAlt, maxAlt: item.maxAlt,
-startTime: item.startTime, endTime: item.endTime, layer: layer, feature: feature,
-color: item.color, popup: popup, showLabel: item.showLabel, label: null,
-status: zoneStatus, isUserCreated: true
-};
-zones.push(zone);
-});
-setTimeout(() => {
-const userCount = data.length;
-zones.slice(-userCount).forEach((zone, idx) => {
-if (zone.showLabel) toggleZoneLabel(zones.length - userCount + idx);
-});
-updateZoneList();
-}, 500);
-} catch(e) { console.error("Failed to load user zones:", e); }
-}
-
-// =============================
-// LOAD DATA FROM notams.json
+// LOAD DATA FROM notams.json (ONLINE ONLY)
 // =============================
 async function loadNotamsData() {
 try {
@@ -1303,7 +1152,7 @@ if (!response.ok) {
 throw new Error(`Failed to load ${DATA_FILE}: ${response.status} ${response.statusText}`);
 }
 const data = await response.json();
-document.getElementById('lastUpdated').textContent = new Date().toLocaleString('en-GB', { timeZone: 'UTC', hour12: false });
+document.getElementById('dataStatus').textContent = `Updated: ${new Date().toISOString().slice(0,16)} UTC`;
 
 data.forEach(item => {
 if (!item.geometry?.coordinates || item.geometry.coordinates.length < 3) return;
@@ -1334,7 +1183,7 @@ const zone = {
 id: item.id, desc: item.desc, minAlt: item.minAlt, maxAlt: item.maxAlt,
 startTime: item.startTime, endTime: item.endTime, layer: layer, feature: feature,
 color: item.color, popup: popup, showLabel: item.showLabel, label: null,
-status: zoneStatus, isUserCreated: false
+status: zoneStatus
 };
 zones.push(zone);
 });
@@ -1350,14 +1199,14 @@ if (zones.some(z => z.startTime || z.endTime)) setTimeout(updateAllStatuses, 100
 
 } catch (error) {
 console.error("Error loading NOTAM data:", error);
-showError(`❌ ${error.message}. Please ensure notams.json exists.`);
+showError(`❌ ${error.message}. Please ensure notams.json exists in the same directory.`);
 hideLoading();
+document.getElementById('dataStatus').textContent = 'Error loading data';
 }
 }
 
-// INIT - LOAD DATA
+// INIT - LOAD DATA ON STARTUP (ONLINE ONLY - NO LOCALSTORAGE)
 loadNotamsData();
-loadUserZonesFromStorage();
 </script>
 </body>
 </html>
