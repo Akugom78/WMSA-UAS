@@ -1183,10 +1183,6 @@ item.innerHTML = `
 </div>
 <div class="zone-main" style="align-items: flex-start;">
 <div class="zone-desc" style="flex:1; word-wrap: break-word;">${zone.desc} ${altStr}</div>
-<div class="toggle-label-icon" onclick="toggleZoneLabel(${originalIndex})" title="Toggle label">
-<span style="display: inline-block; background: white; color: black; border: 2px solid black; border-radius: 4px; padding: 2px 6px; font-size: 16px; font-weight: bold; line-height: 1; text-align: center;">${zone.showLabel ? '👁️' : '👁️‍🗨️'}</span>
-</div>
-</div>
 <div><small class="zone-status">${statusHTML}</small></div>
 `;
 item.addEventListener('click', function(e) {
@@ -1341,6 +1337,7 @@ loadNotamsData();
 </script>
 </body>
 </html>
+
 
 
 
