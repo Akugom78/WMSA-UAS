@@ -35,6 +35,7 @@ z-index: 10000; font-weight: bold; display: none;
 position: fixed; top: 0; height: 100vh; z-index: 1000;
 background: rgba(255, 255, 255, 0.5); /* 50% opacity */
 backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px); /* Safari support */
 padding: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.3);
 border-radius: 0; transition: transform 0.3s ease;
 font-size: 13px; overflow-y: auto;
@@ -45,8 +46,13 @@ right: -380px; width: 380px;
 .panel-left { 
 left: -320px; width: 320px; 
 }
-.panel-right.visible, .panel-left.visible {
-transform: translateX(0);
+.panel-right.visible { 
+transform: translateX(-380px); 
+right: 0;
+}
+.panel-left.visible { 
+transform: translateX(320px); 
+left: 0;
 }
 .panel-header {
 display: flex; justify-content: space-between; align-items: center;
@@ -57,9 +63,9 @@ color: white; border-radius: 0 0 5px 5px;
 .panel-header h3 {
 margin: 0; font-size: 14px; font-weight: bold;
 }
-/* TOGGLE BUTTONS FOR DRAWERS */
+/* TOGGLE BUTTONS FOR DRAWERS - ALWAYS VISIBLE */
 .toggle-drawer-btn {
-position: fixed; z-index: 1500; padding: 10px 15px; 
+position: fixed; z-index: 1500; padding: 12px 15px; 
 border: none; border-radius: 0 5px 5px 0; 
 background: rgba(0, 68, 148, 0.9); color: white;
 font-weight: bold; cursor: pointer; box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
@@ -75,14 +81,23 @@ border-radius: 5px 0 0 5px;
 }
 .toggle-drawer-btn:hover {
 background: rgba(0, 50, 110, 0.95);
-transform: translateY(-50%) scaleX(1.05);
 }
 .toggle-drawer-btn:active {
 transform: translateY(-50%) scale(0.95);
 }
+/* Close buttons inside panels */
+.panel-close-btn {
+background: rgba(255,255,255,0.3); color: white; border: none;
+width: 32px; height: 32px; border-radius: 4px; font-weight: bold;
+font-size: 18px; cursor: pointer;
+}
+.panel-close-btn:hover {
+background: rgba(255,255,255,0.5);
+}
 input, textarea, button, select {
 width: 100%; margin: 4px 0; padding: 6px; box-sizing: border-box;
-font-size: 13px; background: rgba(255,255,255,0.9);
+font-size: 13px; background: rgba(255,255,255,0.95); /* White background for readability */
+border: 1px solid #ccc;
 }
 textarea { height: 50px; }
 button {
@@ -103,7 +118,7 @@ left: 50%;
 transform: translateX(-50%);
 z-index: 2000;
 width: 550px;
-background: rgba(255, 255, 255, 0.9);
+background: rgba(255, 255, 255, 0.95);
 padding: 8px 12px;
 border-radius: 20px;
 box-shadow: 0 2px 15px rgba(0,0,0,0.3);
@@ -149,7 +164,7 @@ cursor: pointer;
 /* ZONE LIST - COMPACT */
 #zoneListPanel { text-transform: uppercase; }
 .zone-item {
-padding: 6px; margin: 4px 0; background: rgba(249, 249, 249, 0.9);
+padding: 6px; margin: 4px 0; background: rgba(249, 249, 249, 0.95);
 border-radius: 3px; display: flex; flex-direction: column; 
 font-size: 12px; border-left: 3px solid transparent;
 transition: all 0.2s;
@@ -182,10 +197,10 @@ font-weight: bold; cursor: pointer;
 .edit-icon:hover { color: #122b40; }
 .delete-icon:hover { color: #bd2130; }
 /* COORD INPUT */
-.coord-inputs { margin-top: 10px; padding: 8px; background: rgba(245,245,245,0.9); border-radius: 4px; }
+.coord-inputs { margin-top: 10px; padding: 8px; background: rgba(245,245,245,0.95); border-radius: 4px; }
 .points-preview {
 max-height: 100px; overflow-y: auto; margin: 8px 0; padding: 6px;
-background: rgba(238, 238, 255, 0.9); border-radius: 3px; font-size: 11px;
+background: rgba(238, 238, 255, 0.95); border-radius: 3px; font-size: 11px;
 }
 .point-tag {
 display: inline-block; background: #004494; color: white;
@@ -212,7 +227,7 @@ padding: 20px; border-radius: 8px;
 #editModal button { width: auto; padding: 8px 16px; margin: 5px; }
 /* CIRCLE INPUT SECTION */
 .circle-input-section {
-margin-top: 15px; padding: 12px; background: rgba(240, 248, 255, 0.9); 
+margin-top: 15px; padding: 12px; background: rgba(240, 248, 255, 0.95); 
 border-radius: 4px; border: 1px solid #004494;
 }
 .circle-input-section h4 {
@@ -236,27 +251,34 @@ z-index: 1100 !important;
 }
 .ol-overlay-container .ol-overlay {
 max-width: 220px;
-pointer-events: none; /* Prevent blocking map interactions */
+pointer-events: none;
 }
 .ol-overlay-container .ol-overlay > div {
-pointer-events: auto; /* But allow interactions with content */
+pointer-events: auto;
 }
 /* MOBILE RESPONSIVE DESIGN */
 @media (max-width: 768px) {
 #floatingSearch { width: 95%; top: 10px; }
 .filter-buttons { flex-direction: column; }
 .filter-btn { min-width: 100%; width: 100%; }
-.toggle-drawer-btn { padding: 8px 12px; font-size: 12px; }
-.panel-right, .panel-left { width: 95%; }
-.panel-right { right: -95%; }
-.panel-left { left: -95%; }
+.toggle-drawer-btn { padding: 10px 12px; font-size: 12px; }
+.panel-right, .panel-left { width: 90%; }
+.panel-right { right: -90%; }
+.panel-right.visible { transform: translateX(-90%); right: 0; }
+.panel-left { left: -90%; }
+.panel-left.visible { transform: translateX(90%); left: 0; }
 .info-footer { flex-direction: column; font-size: 11px; }
 .footer-left, .footer-right { flex-direction: column; gap: 5px; }
 }
 @media (max-width: 480px) {
 #floatingSearch { width: 98%; padding: 6px; }
 #floatingSearch input { font-size: 12px; padding: 5px 10px; }
-.toggle-drawer-btn { padding: 6px 10px; font-size: 11px; }
+.toggle-drawer-btn { padding: 8px 10px; font-size: 11px; }
+.panel-right, .panel-left { width: 95%; }
+.panel-right { right: -95%; }
+.panel-right.visible { transform: translateX(-95%); right: 0; }
+.panel-left { left: -95%; }
+.panel-left.visible { transform: translateX(95%); left: 0; }
 }
 </style>
 </head>
@@ -281,7 +303,7 @@ pointer-events: auto; /* But allow interactions with content */
 </div>
 </div>
 
-<!-- DRAWER TOGGLE BUTTONS -->
+<!-- DRAWER TOGGLE BUTTONS - ALWAYS VISIBLE -->
 <button class="toggle-drawer-btn left" id="toggleLeftDrawer">◀ Zones</button>
 <button class="toggle-drawer-btn right" id="toggleRightDrawer">Create ▶</button>
 
@@ -289,14 +311,14 @@ pointer-events: auto; /* But allow interactions with content */
 <div id="editModal">
 <div>
 <h3>Edit Zone</h3>
-<input type="text" id="editId" placeholder="NOTAM ID" style="width:100%; margin:5px 0; padding:8px; text-transform:uppercase; background:white;">
-<textarea id="editDesc" placeholder="Description" style="width:100%; height:60px; margin:5px 0; padding:8px; background:white;"></textarea>
+<input type="text" id="editId" placeholder="NOTAM ID" style="width:100%; margin:5px 0; padding:8px; text-transform:uppercase; background:white; border:1px solid #ccc;">
+<textarea id="editDesc" placeholder="Description" style="width:100%; height:60px; margin:5px 0; padding:8px; background:white; border:1px solid #ccc;"></textarea>
 <div style="display:flex; gap:5px;">
-<input type="number" id="editMinAlt" placeholder="Min Alt (ft)" style="width:48%; padding:8px; background:white;">
-<input type="number" id="editMaxAlt" placeholder="Max Alt (ft)" style="width:48%; padding:8px; background:white;">
+<input type="number" id="editMinAlt" placeholder="Min Alt (ft)" style="width:48%; padding:8px; background:white; border:1px solid #ccc;">
+<input type="number" id="editMaxAlt" placeholder="Max Alt (ft)" style="width:48%; padding:8px; background:white; border:1px solid #ccc;">
 </div>
-<input type="datetime-local" id="editStartTime" style="width:100%; margin:5px 0; padding:8px; background:white;">
-<input type="datetime-local" id="editEndTime" style="width:100%; margin:5px 0; padding:8px; background:white;">
+<input type="datetime-local" id="editStartTime" style="width:100%; margin:5px 0; padding:8px; background:white; border:1px solid #ccc;">
+<input type="datetime-local" id="editEndTime" style="width:100%; margin:5px 0; padding:8px; background:white; border:1px solid #ccc;">
 <div style="margin-top:15px; display:flex; gap:10px;">
 <button id="saveEditBtn" style="flex:1; background:#28a745; color:white; border:none; padding:10px; font-weight:bold;">💾 Save Changes</button>
 <button id="cancelEditBtn" style="flex:1; background:#c82333; color:white; border:none; padding:10px; font-weight:bold;">❌ Cancel</button>
@@ -308,22 +330,22 @@ pointer-events: auto; /* But allow interactions with content */
 <div class="panel-right" id="controlPanel">
 <div class="panel-header">
 <h3>🡺 Create Zone</h3>
-<button id="closeRightPanelBtn" class="panel-toggle" style="background:rgba(255,255,255,0.3);">✕</button>
+<button id="closeRightPanelBtn" class="panel-close-btn">✕</button>
 </div>
 <div class="content" style="padding-top:10px;">
-<input type="text" id="zoneId" placeholder="NOTAM SERIES" required style="text-transform:uppercase; background:white;">
-<textarea id="zoneDesc" placeholder="DESCRIPTION" required style="background:white;"></textarea>
+<input type="text" id="zoneId" placeholder="NOTAM SERIES" required style="text-transform:uppercase; background:white; border:1px solid #ccc;">
+<textarea id="zoneDesc" placeholder="DESCRIPTION" required style="background:white; border:1px solid #ccc;"></textarea>
 <div style="display:flex; gap:5px;">
-<input type="number" id="minAlt" placeholder="Min Alt (ft)" min="0" style="width:48%; background:white;">
-<input type="number" id="maxAlt" placeholder="Max Alt (ft)" min="0" style="width:48%; background:white;">
+<input type="number" id="minAlt" placeholder="Min Alt (ft)" min="0" style="width:48%; background:white; border:1px solid #ccc;">
+<input type="number" id="maxAlt" placeholder="Max Alt (ft)" min="0" style="width:48%; background:white; border:1px solid #ccc;">
 </div>
 <label style="font-size:12px;">⏰ Start Time (UTC)</label>
-<input type="datetime-local" id="startTime" placeholder="Start (UTC)" style="background:white;">
+<input type="datetime-local" id="startTime" placeholder="Start (UTC)" style="background:white; border:1px solid #ccc;">
 <label style="font-size:12px;">⏰ End Time (UTC)</label>
-<input type="datetime-local" id="endTime" placeholder="End (UTC)" style="background:white;">
+<input type="datetime-local" id="endTime" placeholder="End (UTC)" style="background:white; border:1px solid #ccc;">
 <button id="openCoordBtn">📍 Add by Coordinates</button>
 <div id="coordSection" style="display:none;" class="coord-inputs">
-<input type="text" id="singleCoordInput" placeholder="Coordinates (Lat, Lng) e.g., 3.137489, 101.526181" style="width:100%; padding:6px; margin-bottom:8px; background:white;">
+<input type="text" id="singleCoordInput" placeholder="Coordinates (Lat, Lng) e.g., 3.137489, 101.526181" style="width:100%; padding:6px; margin-bottom:8px; background:white; border:1px solid #ccc;">
 <button id="addPointBtn" class="small" style="width:100%;">+ Add Point</button>
 <div class="points-preview" id="pointsPreview"></div>
 <div style="margin-top:8px; display:flex; gap:5px;">
@@ -333,11 +355,11 @@ pointer-events: auto; /* But allow interactions with content */
 </div>
 <div class="circle-input-section">
 <h4>⭕ Create Circular Zone</h4>
-<input type="number" id="circleRadiusNm" placeholder="Radius (Nm)" min="0.1" step="0.1" style="width:100%; padding:8px; margin-bottom:8px; background:white;">
-<input type="text" id="circleCenterCoord" placeholder="Center (Lat, Lng) e.g., 3.137489, 101.526181" style="width:100%; padding:8px; background:white;">
+<input type="number" id="circleRadiusNm" placeholder="Radius (Nm)" min="0.1" step="0.1" style="width:100%; padding:8px; margin-bottom:8px; background:white; border:1px solid #ccc;">
+<input type="text" id="circleCenterCoord" placeholder="Center (Lat, Lng) e.g., 3.137489, 101.526181" style="width:100%; padding:8px; background:white; border:1px solid #ccc;">
 <button id="createCircleBtn" style="background:#004494; width:100%; padding:8px; margin-top:8px;">⭕ Create Circle</button>
 </div>
-<hr style="margin:10px 0;">
+<hr style="margin:10px 0; border:1px solid #eee;">
 <button id="exportBtn" class="success">📤 Export Session Zones</button>
 </div>
 </div>
@@ -346,7 +368,7 @@ pointer-events: auto; /* But allow interactions with content */
 <div class="panel-left" id="zoneListPanel">
 <div class="panel-header">
 <h3>📋 Zones (0)</h3>
-<button id="closeLeftPanelBtn" class="panel-toggle" style="background:rgba(255,255,255,0.3);">✕</button>
+<button id="closeLeftPanelBtn" class="panel-close-btn">✕</button>
 </div>
 <div class="content" style="padding-top:10px;">
 <div id="zoneListContainer">
@@ -432,16 +454,14 @@ activePopup.setPosition(undefined);
 activePopup = null;
 }
 
-let found = false;
 for (let i = 0; i < zones.length; i++) {
 const zone = zones[i];
 if (map.forEachFeatureAtPixel(evt.pixel, function(feature) {
 return feature === zone.feature;
 })) {
 zone.popup.setPosition(evt.coordinate);
-activePopup = zone.popup; // Track active popup
-found = true;
-break; // Only show one popup at a time
+activePopup = zone.popup;
+break;
 }
 }
 });
@@ -473,7 +493,7 @@ fill: new ol.style.Fill({color: 'rgba(0,0,0,0)'})
 });
 map.addLayer(wmsaLayer);
 
-// DRAWER TOGGLE HANDLERS
+// DRAWER TOGGLE HANDLERS - CORRECTED POSITIONING
 const leftPanel = document.getElementById('zoneListPanel');
 const rightPanel = document.getElementById('controlPanel');
 const toggleLeftBtn = document.getElementById('toggleLeftDrawer');
@@ -483,19 +503,15 @@ const closeRightBtn = document.getElementById('closeRightPanelBtn');
 
 toggleLeftBtn.addEventListener('click', () => {
 leftPanel.classList.add('visible');
-toggleLeftBtn.style.display = 'none';
 });
 toggleRightBtn.addEventListener('click', () => {
 rightPanel.classList.add('visible');
-toggleRightBtn.style.display = 'none';
 });
 closeLeftBtn.addEventListener('click', () => {
 leftPanel.classList.remove('visible');
-toggleLeftBtn.style.display = 'block';
 });
 closeRightBtn.addEventListener('click', () => {
 rightPanel.classList.remove('visible');
-toggleRightBtn.style.display = 'block';
 });
 
 // SEARCH FUNCTIONALITY
@@ -506,7 +522,6 @@ const term = this.value.toLowerCase().trim();
 updateZoneList(term);
 if (term.length > 0 && !leftPanel.classList.contains('visible')) {
 leftPanel.classList.add('visible');
-toggleLeftBtn.style.display = 'none';
 }
 });
 
@@ -518,7 +533,6 @@ map.getView().fit(extent, {padding: [70, 70, 70, 70]});
 document.querySelectorAll('.zone-item').forEach(el => el.classList.remove('highlight'));
 const item = document.querySelector(`.zone-item[data-index="${index}"]`);
 if (item) item.classList.add('highlight');
-// Close any open popup
 if (activePopup) {
 activePopup.setPosition(undefined);
 activePopup = null;
@@ -526,8 +540,7 @@ activePopup = null;
 }
 }
 
-// SINGLE-INPUT COORDINATE HANDLING (same as before - omitted for brevity)
-// [Coordinate handling functions remain identical to previous version]
+// SINGLE-INPUT COORDINATE HANDLING
 let manualPoints = [];
 const coordSection = document.getElementById('coordSection');
 const pointsPreview = document.getElementById('pointsPreview');
@@ -600,7 +613,7 @@ manualPoints.splice(index, 1);
 updatePointsPreview();
 }
 
-// CREATE POLYGON FROM MANUAL POINTS (same logic - omitted for brevity)
+// CREATE POLYGON FROM MANUAL POINTS
 document.getElementById('createPolyBtn').addEventListener('click', function() {
 if (manualPoints.length < 3) {
 alert('Please add at least 3 points to create a polygon.');
@@ -631,7 +644,7 @@ updatePointsPreview();
 coordSection.style.display = 'none';
 });
 
-// CIRCLE ZONE CREATION (same logic - omitted for brevity)
+// CIRCLE ZONE CREATION
 document.getElementById('createCircleBtn').addEventListener('click', function() {
 const radiusNm = parseFloat(document.getElementById('circleRadiusNm').value);
 const centerCoordInput = document.getElementById('circleCenterCoord');
@@ -724,11 +737,11 @@ fill: new ol.style.Fill({color: color + '66'})
 });
 }
 
-// ZONE CREATION SYSTEM (WITHOUT LABEL TOGGLES)
+// ZONE CREATION SYSTEM - WITHOUT LABEL TOGGLES
 function createZoneFromFeature(feature, zoneId, zoneDesc, minAlt, maxAlt, startTime, endTime, color, showLabel) {
 const layer = new ol.layer.Vector({source: new ol.source.Vector({features: [feature]})});
 map.addLayer(layer);
-// Create popup (without label toggle references)
+// Create popup (without label references)
 const popup = new ol.Overlay({element: document.createElement('div'), positioning: 'bottom-center', stopEvent: false});
 map.addOverlay(popup);
 const altStr = minAlt || maxAlt ? `${minAlt || 0}–${maxAlt || 'UNL'} ft` : 'No altitude';
@@ -756,7 +769,7 @@ updateZoneList();
 if (startTime || endTime) setTimeout(() => updateAllStatuses(), 1000);
 }
 
-// EXPORT FUNCTIONALITY (same as before)
+// EXPORT FUNCTIONALITY
 document.getElementById('exportBtn').addEventListener('click', function() {
 if (zones.length === 0) {
 alert("No zones to export.");
@@ -781,7 +794,7 @@ URL.revokeObjectURL(url);
 alert(`✅ Exported ${zones.length} zones.`);
 });
 
-// EDIT/DELETE ZONE (without label toggle calls)
+// EDIT/DELETE ZONE (WITHOUT LABEL TOGGLES)
 let currentEditIndex = -1;
 function editZone(index) {
 if (index < 0 || index >= zones.length) return;
@@ -997,13 +1010,17 @@ color: item.color, popup: popup, status: zoneStatus
 };
 zones.push(zone);
 });
-// KEY IMPROVEMENT #3: Default to Active NOTAM view
+// DEFAULT TO ACTIVE NOTAM VIEW
 setTimeout(() => {
 filterZones('active');
 updateZoneList();
 hideLoading();
 if (zones.some(z => z.startTime || z.endTime)) setTimeout(updateAllStatuses, 1000);
 // Ensure no popups are visible on load
+if (activePopup) {
+activePopup.setPosition(undefined);
+activePopup = null;
+}
 zones.forEach(zone => zone.popup.setPosition(undefined));
 }, 500);
 } catch (error) {
