@@ -73,66 +73,85 @@
         #map { width: 100%; height: 100%; }
 
         /* FLOATING SEARCH BAR - WIDE & CENTERED */
-        #search-overlay {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 85%;
-            max-width: 900px;
-            display: flex;
-            gap: 12px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 14px 20px;
-            border-radius: 25px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.35);
-        }
+        #floatingSearch {
+position: fixed;
+top: 12px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 2000;
+width: 480px; /* Reduced from 550px */
+background: rgba(255, 255, 255, 0.25); /* 25% opacity */
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+padding: 6px 10px; /* Reduced padding */
+border-radius: 20px;
+box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+display: flex;
+align-items: center;
+gap: 6px; /* Reduced gap */
+height: 38px; /* Fixed compact height */
+}
 
-        #search-overlay input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.92);
-            border: 2px solid rgba(0, 68, 148, 0.8);
-            border-radius: 18px;
-            padding: 12px 20px;
-            font-size: 12px;
-            font-weight: bold;
-            min-width: 250px;
-        }
+#floatingSearch input {
+width: 100%;
+border: 1.5px solid rgba(0, 68, 148, 0.7);
+border-radius: 16px;
+padding: 4px 12px; /* Reduced padding */
+font-size: 12px; /* Reduced font size */
+font-weight: bold;
+background: rgba(255, 255, 255, 0.9);
+height: 28px; /* Fixed compact height */
+}
 
-        #search-overlay input:focus {
-            outline: none;
-            border-color: rgba(0, 50, 110, 0.9);
-            box-shadow: 0 0 8px rgba(0, 59, 130, 0.6);
-        }
+#floatingSearch input::placeholder {
+font-size: 11px; /* Smaller placeholder text */
+}
 
-        .filter-group {
-            display: flex;
-            gap: 8px;
-            min-width: 420px;
-        }
+#floatingSearch input:focus {
+outline: none;
+border-color: rgba(0, 50, 110, 0.85);
+box-shadow: 0 0 5px rgba(0, 59, 130, 0.4);
+}
 
-        /* TOGGLE BUTTONS - ALWAYS VISIBLE ON EDGES */
-        .toggle-btn {
-            position: fixed;
-            top: 25px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--glass-header);
-            color: white;
-            border: none;
-            cursor: pointer;
-            z-index: 2000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
+/* COMPACT FILTER BUTTONS */
+.filter-buttons {
+display: flex;
+gap: 4px; /* Reduced gap */
+min-width: 280px; /* Reduced minimum width */
+}
+
+.filter-btn {
+flex: 1;
+min-width: 65px; /* Reduced minimum width */
+padding: 2px 4px; /* Reduced padding */
+border-radius: 12px; /* More rounded for compact look */
+border: none;
+font-weight: bold;
+font-size: 10px; /* Reduced font size */
+cursor: pointer;
+height: 26px; /* Fixed compact height */
+line-height: 1;
+}
+
+.filter-btn.all { background: rgba(0, 68, 148, 0.8); color: white; }
+.filter-btn.active { background: rgba(200, 35, 51, 0.8); color: white; }
+.filter-btn.pending { background: rgba(0, 102, 204, 0.8); color: white; }
+.filter-btn.expired { background: rgba(102, 102, 102, 0.8); color: white; }
+.filter-btn:hover { 
+opacity: 0.95; 
+transform: translateY(-0.5px);
+}
+
+/* COMPACT TOGGLE BUTTONS */
+.panel-toggle-btn {
+position: fixed; 
+z-index: 1500; 
+padding: 4px 8px; /* Reduced padding */
+font-size: 12px; /* Reduced font size */
+top: 52px; /* Adjusted for compact search bar */
+width: 32px; /* Reduced width */
+height: 32px; /* Reduced height */
+}
 
         .toggle-btn:hover {
             transform: scale(1.08);
@@ -1238,4 +1257,5 @@
     </script>
 </body>
 </html>
+
 
