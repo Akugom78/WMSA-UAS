@@ -525,7 +525,7 @@ const rotationRad = (240 * Math.PI) / 180;
 const map = new ol.Map({
     target: 'map',
     layers: [new ol.layer.Tile({source: new ol.source.OSM()})],
-    view: new ol.View({center: center, zoom: 10, rotation: -rotationRad})
+    view: new ol.View({center: center, zoom: 11, rotation: -rotationRad})
 });
 
 // UTILITY FUNCTIONS
@@ -1253,4 +1253,5 @@ loadNotamsData();
 </script>
 </body>
 </html>
+
 
