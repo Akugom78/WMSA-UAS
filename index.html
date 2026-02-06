@@ -2,77 +2,61 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>WMSA NOTAM VISUALIZER v2</title>
+    <title>WMSA NOTAM VISUALIZER v2.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/css/ol.css">
     <style>
         :root {
-            --panel-width: 350px;
+            --panel-width: 360px;
             --primary: #004494;
+            --accent: #0066cc;
             --danger: #c82333;
-            --glass: rgba(255, 255, 255, 0.85);
+            --success: #28a745;
+            --bg-glass: rgba(255, 255, 255, 0.9);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a1a; overflow: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f0f0; overflow: hidden; }
 
-        /* MAIN LAYOUT WRAPPER */
-        #main-container {
+        /* FLEXBOX LAYOUT ENGINE */
+        #app-wrapper {
             display: flex;
             width: 100vw;
             height: 100vh;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* PANELS */
         .side-panel {
             width: 0;
             height: 100%;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
             overflow: hidden;
             transition: width 0.4s ease;
             display: flex;
             flex-direction: column;
-            border-right: 0 solid rgba(0,0,0,0.1);
-            z-index: 10;
+            z-index: 100;
+            border-right: 0 solid #ddd;
+            border-left: 0 solid #ddd;
         }
 
         .side-panel.visible {
             width: var(--panel-width);
-            border-right-width: 1px;
+            border-width: 1px;
         }
 
-        /* MAP SECTION */
-        #map-wrapper {
+        #map-container {
             flex-grow: 1;
             position: relative;
             height: 100%;
+            background: #eee;
         }
 
         #map { width: 100%; height: 100%; }
 
-        /* FLOATING SEARCH - ADAPTIVE */
-        #search-overlay {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 90%;
-            max-width: 700px;
-            display: flex;
-            gap: 10px;
-            background: rgba(255,255,255,0.9);
-            padding: 10px;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        /* UI ELEMENTS */
+        /* UI CONTROLS */
         .panel-header {
-            padding: 20px;
+            padding: 15px 20px;
             background: var(--primary);
             color: white;
             display: flex;
@@ -80,11 +64,16 @@
             align-items: center;
         }
 
-        .content { padding: 20px; overflow-y: auto; flex-grow: 1; }
+        .content-area {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
 
         input, textarea, button {
             width: 100%; margin: 8px 0; padding: 10px;
-            border-radius: 8px; border: 1px solid #ccc;
+            border-radius: 6px; border: 1px solid #ccc;
+            font-size: 13px;
         }
 
         button { 
@@ -92,12 +81,31 @@
             font-weight: bold; cursor: pointer; transition: 0.2s;
         }
 
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        button:hover { filter: brightness(1.1); }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
 
-        /* TOGGLE BUTTONS (Always Visible) */
-        .toggle-btn {
+        /* FLOATING SEARCH BAR */
+        #search-overlay {
             position: absolute;
-            top: 25px;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        /* TOGGLE BUTTONS */
+        .drawer-toggle {
+            position: absolute;
+            top: 22px;
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -105,104 +113,98 @@
             color: white;
             border: none;
             cursor: pointer;
-            z-index: 2000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            font-size: 20px;
+            z-index: 1100;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 18px;
         }
 
-        #left-toggle { left: 20px; }
-        #right-toggle { right: 20px; }
+        #toggle-left { left: 20px; }
+        #toggle-right { right: 20px; }
 
-        /* STATUS TAGS */
-        .status-active { color: #d32f2f; font-weight: bold; }
-        .status-pending { color: #1976d2; font-weight: bold; }
+        /* ZONE LIST ITEMS */
+        .zone-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
-        /* COORDINATE PREVIEW */
+        .status-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            float: right;
+            text-transform: uppercase;
+        }
+
         .point-tag {
-            background: #eee; padding: 5px; margin: 5px 0;
-            border-radius: 4px; display: flex; justify-content: space-between;
+            background: #e9ecef;
+            padding: 4px 8px;
+            margin: 2px;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 11px;
         }
-
-        #editModal {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center;
-        }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 400px; }
     </style>
 </head>
 <body>
 
-    <button id="left-toggle" class="toggle-btn" title="Toggle List">📋</button>
-    <button id="right-toggle" class="toggle-btn" title="Toggle Creator">➕</button>
+    <button id="toggle-left" class="drawer-toggle">📋</button>
+    <button id="toggle-right" class="drawer-toggle">➕</button>
 
-    <div id="main-container">
+    <div id="app-wrapper">
         <aside id="left-panel" class="side-panel">
             <div class="panel-header">
-                <h3>NOTAM List</h3>
+                <h3>Active NOTAMs</h3>
             </div>
-            <div class="content" id="zoneListContainer">
-                <p style="text-align:center; color:#666;">No zones created yet.</p>
+            <div class="content-area" id="zoneListContainer">
+                <p style="text-align:center; color:#888;">No zones created.</p>
             </div>
         </aside>
 
-        <main id="map-wrapper">
+        <main id="map-container">
             <div id="search-overlay">
-                <input type="text" id="searchInput" placeholder="Search NOTAM ID or Description...">
-                <div style="display:flex; gap:5px;">
-                    <button id="filterActive" style="width:auto; padding:0 15px; background:#d32f2f">Active</button>
-                    <button id="filterAll" style="width:auto; padding:0 15px;">All</button>
-                </div>
+                <input type="text" id="searchInput" placeholder="Search NOTAM ID..." style="margin:0; border:none; outline:none;">
             </div>
             <div id="map"></div>
         </main>
 
         <aside id="right-panel" class="side-panel">
             <div class="panel-header">
-                <h3>Create Zone</h3>
+                <h3>Create New Zone</h3>
             </div>
-            <div class="content">
-                <input type="text" id="zoneId" placeholder="NOTAM ID (e.g. A1234/24)">
-                <textarea id="zoneDesc" placeholder="Description of Activity"></textarea>
-                <div style="display:flex; gap:10px;">
-                    <input type="number" id="minAlt" placeholder="Min Ft">
-                    <input type="number" id="maxAlt" placeholder="Max Ft">
-                </div>
-                <label>Start (UTC)</label>
-                <input type="datetime-local" id="startTime">
-                <label>End (UTC)</label>
-                <input type="datetime-local" id="endTime">
+            <div class="content-area">
+                <input type="text" id="zoneId" placeholder="NOTAM ID (e.g. A1042/26)">
+                <textarea id="zoneDesc" placeholder="Description of restricted area..."></textarea>
                 
-                <div style="border: 1px dashed #004494; padding: 10px; margin-top: 10px;">
-                    <p style="font-size:12px; font-weight:bold;">POLYGON POINTS</p>
-                    <input type="text" id="coordInput" placeholder="Lat, Lng">
-                    <button id="addPointBtn" style="background:#555">+ Add Point</button>
-                    <div id="pointsPreview"></div>
-                    <button id="createPolyBtn" style="background:#2e7d32">Create Polygon</button>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="minAlt" placeholder="Min (ft)">
+                    <input type="number" id="maxAlt" placeholder="Max (ft)">
                 </div>
 
-                <div style="border: 1px dashed #004494; padding: 10px; margin-top: 15px;">
-                    <p style="font-size:12px; font-weight:bold;">CIRCLE ZONE</p>
+                <div style="background: #f8f9fa; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:10px;">
+                    <strong style="font-size:12px;">POLYGON COORDS</strong>
+                    <input type="text" id="coordInput" placeholder="Lat, Lng (e.g. 3.12, 101.54)">
+                    <button id="addPointBtn" style="background:#666">+ Add Point</button>
+                    <div id="pointsPreview" style="margin:10px 0;"></div>
+                    <button id="createPolyBtn" class="btn-success">Finish Polygon</button>
+                </div>
+
+                <div style="background: #f8f9fa; padding:15px; border-radius:8px; border:1px solid #ddd; margin-top:15px;">
+                    <strong style="font-size:12px;">CIRCLE RADIUS</strong>
                     <input type="number" id="radiusNm" placeholder="Radius (NM)">
                     <input type="text" id="circleCenter" placeholder="Center Lat, Lng">
-                    <button id="createCircleBtn">Create Circle</button>
+                    <button id="createCircleBtn" class="btn-success">Create Circle</button>
                 </div>
             </div>
         </aside>
     </div>
 
-    <div id="editModal">
-        <div class="modal-content">
-            <h3>Edit NOTAM</h3>
-            <input type="text" id="editId">
-            <textarea id="editDesc"></textarea>
-            <button id="saveEditBtn" style="background:#2e7d32">Save</button>
-            <button onclick="document.getElementById('editModal').style.display='none'" style="background:#666">Cancel</button>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
     <script>
-        // --- MAP CONFIG ---
+        // --- INITIALIZATION ---
         const center = ol.proj.fromLonLat([101.53, 3.13]);
         const map = new ol.Map({
             target: 'map',
@@ -213,104 +215,107 @@
         let zones = [];
         let manualPoints = [];
 
-        // --- UI LOGIC ---
+        // --- DRAWER LOGIC ---
         const leftPanel = document.getElementById('left-panel');
         const rightPanel = document.getElementById('right-panel');
 
-        document.getElementById('left-toggle').onclick = () => leftPanel.classList.toggle('visible');
-        document.getElementById('right-toggle').onclick = () => rightPanel.classList.toggle('visible');
+        document.getElementById('toggle-left').onclick = () => {
+            leftPanel.classList.toggle('visible');
+            setTimeout(() => map.updateSize(), 400); // Trigger map resize after transition
+        };
 
-        // --- ZONE LOGIC ---
-        function getStatus(start, end) {
-            const now = new Date();
-            if (end && now > new Date(end)) return 'expired';
-            if (start && now < new Date(start)) return 'pending';
-            return 'active';
-        }
+        document.getElementById('toggle-right').onclick = () => {
+            rightPanel.classList.toggle('visible');
+            setTimeout(() => map.updateSize(), 400);
+        };
 
-        function createZone(id, desc, coords, min, max, start, end, type = 'poly') {
-            const color = type === 'poly' ? 'rgba(0, 68, 148, 0.4)' : 'rgba(211, 47, 47, 0.4)';
-            const feature = new ol.Feature({
-                geometry: type === 'poly' 
-                    ? new ol.geom.Polygon([coords.map(p => ol.proj.fromLonLat(p))])
-                    : createCircleGeom(coords, min) // min used as radius in circle logic
-            });
-
+        // --- CORE FUNCTIONS ---
+        function addZoneToMap(id, desc, geometry, color) {
+            const feature = new ol.Feature({ geometry: geometry });
             const style = new ol.style.Style({
-                stroke: new ol.style.Stroke({ color: '#004494', width: 2 }),
+                stroke: new ol.style.Stroke({ color: '#000', width: 2 }),
                 fill: new ol.style.Fill({ color: color })
             });
             feature.setStyle(style);
 
-            const layer = new ol.layer.Vector({ source: new ol.source.Vector({ features: [feature] }) });
-            map.addLayer(layer);
+            const layer = new ol.layer.Vector({
+                source: new ol.source.Vector({ features: [feature] })
+            });
 
-            const zone = { id, desc, min, max, start, end, layer, feature };
-            zones.push(zone);
+            map.addLayer(layer);
+            zones.push({ id, desc, layer, feature });
             updateList();
         }
 
-        function createCircleGeom(centerPt, radiusNm) {
-            const center = ol.proj.fromLonLat(centerPt);
-            const radius = radiusNm * 1852; // NM to Meters
-            const points = [];
-            for (let i = 0; i < 64; i++) {
-                const angle = (i * 2 * Math.PI) / 64;
-                points.push([
-                    center[0] + radius * Math.cos(angle),
-                    center[1] + radius * Math.sin(angle)
-                ]);
-            }
-            points.push(points[0]);
-            return new ol.geom.Polygon([points]);
-        }
-
-        // --- EVENT HANDLERS ---
+        // Polygon Logic
         document.getElementById('addPointBtn').onclick = () => {
-            const val = document.getElementById('coordInput').value.split(',');
-            if(val.length === 2) {
-                const p = [parseFloat(val[1].trim()), parseFloat(val[0].trim())];
-                manualPoints.push(p);
-                document.getElementById('pointsPreview').innerHTML += `<div class="point-tag">${val[0]}, ${val[1]}</div>`;
+            const input = document.getElementById('coordInput').value.split(',');
+            if(input.length === 2) {
+                const lat = parseFloat(input[0].trim());
+                const lng = parseFloat(input[1].trim());
+                manualPoints.push([lng, lat]);
+                document.getElementById('pointsPreview').innerHTML += `<span class="point-tag">${lat}, ${lng}</span>`;
                 document.getElementById('coordInput').value = '';
             }
         };
 
         document.getElementById('createPolyBtn').onclick = () => {
-            const id = document.getElementById('zoneId').value;
+            const id = document.getElementById('zoneId').value || "Unnamed Poly";
             const desc = document.getElementById('zoneDesc').value;
-            if(manualPoints.length > 2) {
-                createZone(id, desc, manualPoints, null, null, null, null, 'poly');
-                manualPoints = [];
-                document.getElementById('pointsPreview').innerHTML = '';
+            if(manualPoints.length < 3) return alert("Need 3+ points");
+            
+            const coords = [...manualPoints, manualPoints[0]].map(p => ol.proj.fromLonLat(p));
+            const geom = new ol.geom.Polygon([coords]);
+            addZoneToMap(id, desc, geom, 'rgba(0, 102, 204, 0.3)');
+            
+            manualPoints = [];
+            document.getElementById('pointsPreview').innerHTML = '';
+        };
+
+        // Circle Logic
+        document.getElementById('createCircleBtn').onclick = () => {
+            const id = document.getElementById('zoneId').value || "Unnamed Circle";
+            const radNm = parseFloat(document.getElementById('radiusNm').value);
+            const centerIn = document.getElementById('circleCenter').value.split(',');
+            
+            if(radNm && centerIn.length === 2) {
+                const center = ol.proj.fromLonLat([parseFloat(centerIn[1].trim()), parseFloat(centerIn[0].trim())]);
+                const radius = radNm * 1852; // NM to Meters
+                
+                // Create circle by densifying points for better compatibility
+                const pts = [];
+                for(let i=0; i<=64; i++) {
+                    const angle = (i * 2 * Math.PI) / 64;
+                    pts.push([center[0] + radius * Math.cos(angle), center[1] + radius * Math.sin(angle)]);
+                }
+                const geom = new ol.geom.Polygon([pts]);
+                addZoneToMap(id, "", geom, 'rgba(200, 35, 51, 0.3)');
             }
         };
 
         function updateList() {
             const container = document.getElementById('zoneListContainer');
-            container.innerHTML = '';
+            container.innerHTML = zones.length ? '' : '<p style="text-align:center; color:#888;">No zones created.</p>';
+            
             zones.forEach((z, i) => {
-                const div = document.createElement('div');
-                div.style.background = 'white';
-                div.style.padding = '10px';
-                div.style.margin = '10px 0';
-                div.style.borderRadius = '8px';
-                div.innerHTML = `
-                    <strong>${z.id}</strong><br>
-                    <small>${z.desc}</small><br>
-                    <button onclick="zoomTo(${i})" style="padding:4px; font-size:10px; width:auto;">Zoom</button>
-                    <button onclick="removeZone(${i})" style="padding:4px; font-size:10px; width:auto; background:red;">Del</button>
+                const card = document.createElement('div');
+                card.className = 'zone-card';
+                card.innerHTML = `
+                    <strong>${z.id}</strong>
+                    <div style="font-size:11px; margin:5px 0;">${z.desc}</div>
+                    <button onclick="zoomTo(${i})" style="width:auto; padding:3px 8px; font-size:10px;">Zoom</button>
+                    <button onclick="delZone(${i})" class="btn-danger" style="width:auto; padding:3px 8px; font-size:10px;">Del</button>
                 `;
-                container.appendChild(div);
+                container.appendChild(card);
             });
         }
 
         window.zoomTo = (i) => {
             const ext = zones[i].feature.getGeometry().getExtent();
-            map.getView().fit(ext, { padding: [50, 50, 50, 50], duration: 1000 });
+            map.getView().fit(ext, { padding: [50, 50, 50, 50], duration: 800 });
         };
 
-        window.removeZone = (i) => {
+        window.delZone = (i) => {
             map.removeLayer(zones[i].layer);
             zones.splice(i, 1);
             updateList();
