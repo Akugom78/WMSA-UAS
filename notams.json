@@ -2226,5 +2226,69 @@
         ]
       ]
     }
+  },
+  {
+    "id": "A1064/26",
+    "desc": "A) WMSA B) 2604010000 C) 2606301000 \nD) DLY 0000-1000\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT PUTRA HEIGHTS \n   \n    RMK: ACT SUBJ ATC\nF) SFC    G) 300FT AMSL",
+    "minAlt": 0,
+    "maxAlt": 300,
+    "startTime": "2026-04-01T08:00:00.000Z",
+    "endTime": "2026-06-30T18:00:00.000Z",
+    "color": "#8B8B00",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.580803,
+          3.0001310000000103
+        ],
+        [
+          101.509325,
+          3.0306559999999934
+        ],
+        [
+          101.477514,
+          3.0225059999999786
+        ],
+        [
+          101.470984,
+          3.0354520000000065
+        ],
+        [
+          101.580803,
+          3.0001310000000103
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1067/26",
+    "desc": "A) WMSA B) 2604010000 C) 2606301000 \nD) DLY 0000-1000\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT SECTOR 24 KAPAR AREA  \n    RMK: ACT SUBJ ATC\nF) SFC   G) 400FT AMSL",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-04-01T08:00:00.000Z",
+    "endTime": "2026-06-30T18:00:00.000Z",
+    "color": "#00008B",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.36250000000001,
+          3.129722000000001
+        ],
+        [
+          101.34027799999998,
+          3.117500000000007
+        ],
+        [
+          101.32750000000001,
+          3.118333000000007
+        ],
+        [
+          101.36250000000001,
+          3.129722000000001
+        ]
+      ]
+    }
   }
 ]
