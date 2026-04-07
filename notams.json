@@ -2290,5 +2290,65 @@
         ]
       ]
     }
+  },
+  {
+    "id": "A0598/26",
+    "desc": "A) WMSA B) 2602220000 C) 2605220900 EST\nD) 0000-0900\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT BATU TIGA, SELANGOR   RMK: ACT SUBJ TO ATC\n \nF) SFC         G) 400FT AMSL",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-02-22T08:00:00.000Z",
+    "endTime": "2026-05-22T17:00:00.000Z",
+    "color": "#8B4513",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.50151400000001,
+          3.0950440000000015
+        ],
+        [
+          101.56727800000002,
+          3.084969000000001
+        ],
+        [
+          101.58232499999998,
+          3.0215280000000035
+        ],
+        [
+          101.50151400000001,
+          3.0950440000000015
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A0602/26",
+    "desc": "A) WMSA B) 2602220000 C) 2605220900 EST\nD) 0000-0900\nE) UA ACT WILL TAKE PLACE ALONG THE PETRONAS GAS PIPELINE AT MERU CITY GATE, SELANGOR RMK: ACT SUBJ TO ATC\n \nF) SFC     G) 400FT",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-02-22T08:00:00.000Z",
+    "endTime": "2026-05-22T17:00:00.000Z",
+    "color": "#4B0082",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.402733,
+          3.150780999999995
+        ],
+        [
+          101.417486,
+          3.1114000000000033
+        ],
+        [
+          101.501083,
+          3.0949669999999827
+        ],
+        [
+          101.402733,
+          3.150780999999995
+        ]
+      ]
+    }
   }
 ]
