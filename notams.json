@@ -3761,7 +3761,7 @@
     "minAlt": null,
     "maxAlt": 2500,
     "startTime": "2026-04-25T09:00:00.000Z",
-    "endTime": "2026-05-02T14:00:00.000Z",
+    "endTime": "2026-05-03T14:00:00.000Z",
     "color": "#8B8B00",
     "geometry": {
       "type": "Polygon",
