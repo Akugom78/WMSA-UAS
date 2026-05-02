@@ -3792,10 +3792,10 @@
   {
     "id": "A1245/26",
     "desc": "A) WMSA\nB) 2605040000 C) 2605040700\nE) ILS RWY15 ON TEST(CLBR).)",
-    "minAlt": 0,
+    "minAlt": null,
     "maxAlt": 2500,
-    "startTime": "2026-04-04T00:00:00.000Z",
-    "endTime": "2026-05-04T07:00:00.000Z",
+    "startTime": "2026-05-04T00:00:00.000Z",
+    "endTime": "2026-05-03T23:00:00.000Z",
     "color": "#00008B",
     "geometry": {
       "type": "Polygon",
