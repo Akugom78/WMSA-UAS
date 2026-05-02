@@ -3758,7 +3758,7 @@
   {
     "id": "A1502/26",
     "desc": "A) WMSA\nB) 2604261700 C) 2605032200\nD) 1700-2200\nE) RWY 15/33 CLSD)",
-    "minAlt": null,
+    "minAlt": 0,
     "maxAlt": 2500,
     "startTime": "2026-04-25T09:00:00.000Z",
     "endTime": "2026-05-03T14:00:00.000Z",
