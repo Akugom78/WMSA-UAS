@@ -3826,10 +3826,10 @@
   {
     "id": "A1583/26",
     "desc": "A) WMFC\nB) 2605050001 C) 2605141500\nD) MAY 05 06 07 13 14 0001-1500\nE) MIL ACT WILL TAKE PLACE WI 4NM RADIUS OF KEM PERDANA, SUNGAI BESI\nF) SFC G) 1000FT AMSL)",
-    "minAlt": 0,
-    "maxAlt": 1000,
-    "startTime": "2026-05-05T08:00:00.000Z",
-    "endTime": "2026-05-14T23:00:00.000Z",
+    "minAlt": null,
+    "maxAlt": null,
+    "startTime": "2026-05-05T00:00:00.000Z",
+    "endTime": "2026-05-14T15:00:00.000Z",
     "color": "#4B0082",
     "geometry": {
       "type": "Polygon",
@@ -3839,7 +3839,7 @@
           3.0622199999999964
         ],
         [
-          101.79066675330844,
+          101.79066675330846,
           3.0687334322741577
         ],
         [
@@ -4087,12 +4087,194 @@
           3.049255745563215
         ],
         [
-          101.79066675330844,
+          101.79066675330846,
           3.0557065281137454
         ],
         [
           101.79098719624757,
           3.0622199999999964
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1798/26",
+    "desc": "A) WMSA B) 2605210000 C) 2608191000 \nD)DLY 0000-1000\nE)UA ACT WILL TAKE PLACE ALONG PETRONAS PIPELINE AT PUCHONG CITY\n\nRMK:ACT SUBJECT TO ATC\n\n\nF) GND                             G) 400FT AGL\n\nOPERATOR: Aerodyne Geospatial",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-05-21T00:00:00.000Z",
+    "endTime": "2026-08-19T10:00:00.000Z",
+    "color": "#4B0082",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.612533,
+          2.9755779999999987
+        ],
+        [
+          101.658097,
+          2.971924999999999
+        ],
+        [
+          101.659675,
+          2.9812940000000054
+        ],
+        [
+          101.610956,
+          2.981932999999998
+        ],
+        [
+          101.612533,
+          2.9755779999999987
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1797/26",
+    "desc": "A) WMSA B) 2605210000 C) 2608191000 \nD)DLY 0000-1000\nE)UA ACT WILL TAKE PLACE ALONG PETRONAS PIPELINE AT MERU CITY GATE)\nRMK:ACT SUBJECT TO ATC\n\nF) GND                             G) 400FT AGL\n\nOPERATOR: Aerodyne Geospatial",
+    "minAlt": 0,
+    "maxAlt": 400,
+    "startTime": "2026-05-21T00:00:00.000Z",
+    "endTime": "2026-08-19T10:00:00.000Z",
+    "color": "#008B8B",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.39633299999998,
+          3.1488999999999976
+        ],
+        [
+          101.413925,
+          3.107463999999979
+        ],
+        [
+          101.509467,
+          3.0917359999999974
+        ],
+        [
+          101.506264,
+          3.096743999999987
+        ],
+        [
+          101.404769,
+          3.1566470000000066
+        ],
+        [
+          101.39633299999998,
+          3.1488999999999976
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1796/26",
+    "desc": "A) WMSA B) 2605210000 C) 2608191000 \nD)DLY 0000-1000\nE)UA ACT WILL TAKE PLACE ALONG PETRONAS PIPELINE AT BATU TIGA, SHAH ALAM\n\nRMK:ACT SUBJECT TO ATC\n\n\nF) GND                             G) 300FT AGL\n\nOPERATOR: Aerodyne Geospatial\n\n\n\n\n\n3.095850, 101.501381",
+    "minAlt": 0,
+    "maxAlt": 300,
+    "startTime": "2026-05-21T00:00:00.000Z",
+    "endTime": "2026-08-19T10:00:00.000Z",
+    "color": "#8B008B",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.582622,
+          3.021091999999996
+        ],
+        [
+          101.5823,
+          3.0356390000000175
+        ],
+        [
+          101.5823,
+          3.0356390000000175
+        ],
+        [
+          101.57232499999999,
+          3.039802999999992
+        ],
+        [
+          101.566822,
+          3.0853330000000057
+        ],
+        [
+          101.50138099999998,
+          3.0958499999999987
+        ],
+        [
+          101.582622,
+          3.021091999999996
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1641/26",
+    "desc": "A) WMSA B) 2605040200 C) 2607300400 \nD)DLY BTN 0200-0400\nE)UA ACT WILL TAKE PLACE AT SHAH ALAM STADIUM, SELANGOR\nF) GND                             G) 200 FT AGL",
+    "minAlt": 0,
+    "maxAlt": 200,
+    "startTime": "2026-05-04T02:00:00.000Z",
+    "endTime": "2026-07-30T06:00:00.000Z",
+    "color": "#2F4F4F",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.53948099999998,
+          3.087350000000015
+        ],
+        [
+          101.55080799999999,
+          3.087463999999997
+        ],
+        [
+          101.551,
+          3.076718999999997
+        ],
+        [
+          101.539478,
+          3.076947000000004
+        ],
+        [
+          101.53948099999998,
+          3.087350000000015
+        ]
+      ]
+    }
+  },
+  {
+    "id": "A1801/26",
+    "desc": "A) WMSA B) 2605190100 C) 2605190900 \nE) SUBANG PSR/SSR RADAR WITHDRAWN FOR MAINT",
+    "minAlt": 0,
+    "maxAlt": 1500,
+    "startTime": "2026-05-19T01:00:00.000Z",
+    "endTime": "2026-05-19T09:00:00.000Z",
+    "color": "#556B2F",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          101.53833199999998,
+          3.1346750000000014
+        ],
+        [
+          101.53727,
+          3.135499999999979
+        ],
+        [
+          101.536503,
+          3.1343510000000094
+        ],
+        [
+          101.537656,
+          3.1335299999999933
+        ],
+        [
+          101.53833199999998,
+          3.1346750000000014
         ]
       ]
     }
