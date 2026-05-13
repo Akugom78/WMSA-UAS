@@ -4171,7 +4171,7 @@
   },
   {
     "id": "A1796/26",
-    "desc": "A) WMSA B) 2605210000 C) 2608191000 \nD)DLY 0000-1000\nE)UA ACT WILL TAKE PLACE ALONG PETRONAS PIPELINE AT BATU TIGA, SHAH ALAM\n\nRMK:ACT SUBJECT TO ATC\n\n\nF) GND                             G) 300FT AGL\n\nOPERATOR: Aerodyne Geospatial\n\n\n\n\n\n3.095850, 101.501381",
+    "desc": "A) WMSA B) 2605210000 C) 2608191000 \nD)DLY 0000-1000\nE)UA ACT WILL TAKE PLACE ALONG PETRONAS PIPELINE AT BATU TIGA, SHAH ALAM\n\nRMK:ACT SUBJECT TO ATC\n\n\nF) GND                             G) 300FT AGL\n\nOPERATOR: Aerodyne Geospatial\n\n\n\n\n\n",
     "minAlt": 0,
     "maxAlt": 300,
     "startTime": "2026-05-21T00:00:00.000Z",
