@@ -4323,7 +4323,7 @@
   },
   {
     "id": "A2716/26 NOTAMN",
-    "desc": "A) WMSA B) 2607170000 C) 2607202359 \nE)TETHERED BALLOON WILL BE HOISTED AT ELMINA CITY\nF) SFC                             G) 100FT AGL",
+    "desc": "A) WMSA B) 2607170000 C) 2607202359 \nE)TETHERED BALLOON WILL BE HOISTED AT ELMINA CITY\nF) SFC           G) 100FT AGL",
     "minAlt": 0,
     "maxAlt": 100,
     "startTime": "2026-07-17T00:00:00.000Z",
@@ -4597,7 +4597,7 @@
   },
   {
     "id": "A2815/26",
-    "desc": "A) WMSA B) 2607200100 C) 2607310900 \nD)DLY BTN 0100-0500, 0600-0900\nE)UA ACT WILL TAKE PLACE WI COORD OF:\n(KEM PAYA JARAS, SG BULOH)\nF) SFC                 G) 500FT AGL",
+    "desc": "A) WMSA B) 2607200100 C) 2607310900 \nD)DLY BTN 0100-0500, 0600-0900\nE)UA ACT WILL TAKE PLACE ATF:\nKEM PAYA JARAS, SG BULOH\nF) SFC           G) 500FT AGL",
     "minAlt": 0,
     "maxAlt": 500,
     "startTime": "2026-07-20T01:00:00.000Z",
